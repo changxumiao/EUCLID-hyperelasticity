@@ -3,7 +3,8 @@
 #=====================================================================
 #sys and core
 import sys
-sys.path.insert(0, "../")
+sys.path.append(".")
+
 from core import *
 #config
 import config as c
@@ -38,4 +39,3 @@ for loadstep in c.loadsteps:
 #=====================================================================
         saveResultsLp(theta,c,counter_load=counter_load)
     c.penaltyLp = c.penaltyLp_init
-
