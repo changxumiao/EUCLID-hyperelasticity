@@ -102,7 +102,7 @@ def loadFemData(path, AD = True, noiseLevel = 0., noiseType = 'displacement', de
         for i in range(dim):
             for j in range(dim):
                 F[:,voigtMap[i][j]] += u[a][:,i] * gradNa[a][:,j]
-    F[:,0] += 1.0#why?
+    F[:,0] += 1.0#Fij = ui/XJ + deltaiJ
     F[:,3] += 1.0#why?
 
     if(noiseType == 'strain'):
