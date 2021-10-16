@@ -31,7 +31,7 @@ def loadFemData(path, AD = True, noiseLevel = 0., noiseType = 'displacement', de
     print('\n-----------------------------------------------------')
     print('Loading data: ', path)
 
-    if(path[-1]=='/'):
+    if(path[-1]=='/'):#avoid // in pathname
         path=path[0:-1]
 
     numNodesPerElement = 3
@@ -39,14 +39,14 @@ def loadFemData(path, AD = True, noiseLevel = 0., noiseType = 'displacement', de
     #nodal data
     df = pd.read_csv(path+'/output_nodes.csv',dtype=np.float64)
     numNodes = df.shape[0]
-    x_nodes = torch.tensor(df[['x','y']].values)
+    x_nodes = torch.tensor(df[['x','y']].values)# load x and y of nodes
 
-    u_nodes = torch.tensor(df[['ux','uy']].values)
+    u_nodes = torch.tensor(df[['ux','uy']].values)# load displacement of nodes
 
     if(denoisedDisplacements is not None):
         u_nodes = denoisedDisplacements
 
-    bcs_nodes = torch.tensor(df[['bcx','bcy']].round().astype(int).values)
+    bcs_nodes = torch.tensor(df[['bcx','bcy']].round().astype(int).values)# boundary conditions nodes?
     #convert bcs_nodes to booleans
     dirichlet_nodes = (bcs_nodes!=0)
     
@@ -58,7 +58,7 @@ def loadFemData(path, AD = True, noiseLevel = 0., noiseType = 'displacement', de
 
 
     noise_nodes = noiseLevel * torch.randn_like(u_nodes)
-    noise_nodes[dirichlet_nodes] = 0.
+    noise_nodes[dirichlet_nodes] = 0.#boundary conditions referain displacement from noise
     if(noiseType == 'displacement'):
         u_nodes += noise_nodes
         print('Applying noise to displacements:',noiseLevel)
@@ -71,12 +71,12 @@ def loadFemData(path, AD = True, noiseLevel = 0., noiseType = 'displacement', de
         reactions.append(Reaction(bcs_nodes == (i+1),df['forces'][i]))
 
 	
-	#element data
+	#element data, generate connectivity matrix
     df = pd.read_csv(path+'/output_elements.csv',dtype=np.float64)
     numElements = df.shape[0]
     connectivity = []
     for i in range(numNodesPerElement):
-        connectivity.append(torch.tensor(df['node'+str(i+1)].round().astype(int).tolist()))
+        connectivity.append(torch.tensor(df['node'+str(i+1)].round().astype(int).tolist()))# specify nodes forming an element
 
 
 	#integrator/shape-function data
@@ -102,8 +102,8 @@ def loadFemData(path, AD = True, noiseLevel = 0., noiseType = 'displacement', de
         for i in range(dim):
             for j in range(dim):
                 F[:,voigtMap[i][j]] += u[a][:,i] * gradNa[a][:,j]
-    F[:,0] += 1.0
-    F[:,3] += 1.0
+    F[:,0] += 1.0#why?
+    F[:,3] += 1.0#why?
 
     if(noiseType == 'strain'):
         F += noiseLevel * torch.randn_like(F)
