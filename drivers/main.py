@@ -3,7 +3,6 @@
 # =====================================================================
 # sys and core
 import sys
-
 sys.path.append(".")
 
 from core import *
@@ -22,7 +21,7 @@ for loadstep in c.loadsteps:
     # =====================================================================
     data = loadFemData(c.femDataPath + '/' + str(loadstep), AD=True, noiseLevel=c.noiseLevel, noiseType='displacement')
     datasets.append(data)
-    data.convertToNumpy()
+    data.convertToNumpy()#previous data are not removed, why?
     # =====================================================================
     # LHS & RHS OF THE WEAK FORM:
     # =====================================================================

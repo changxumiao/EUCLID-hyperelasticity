@@ -44,7 +44,7 @@ femDataPath = './FEM_data/' + str_noise + '/' + str_mesh + '_' + str_model
 #=====================================================================
 # LOAD STEPS:
 #=====================================================================
-if (str_model[-1] == '2') or (str_model[-1] == '4'):
+if (str_model[-1] == '2') or (str_model[-1] == '4'):#get last str
     loadsteps = [10,20,30,40]
 else:
     loadsteps = [10,20,30,40,50,60,70,80]
@@ -53,7 +53,7 @@ else:
 # (HYPER-)PARAMETERS:
 #=====================================================================
 # hyperparameters for cost function
-balance = 100
+balance = 100#what is it for?
 
 # Lp-regularization
 penaltyLp = 1e-4 # initial lp-norm penalty parameter
