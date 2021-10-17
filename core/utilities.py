@@ -92,7 +92,7 @@ def computeStrainInvariantDerivatives(F,i,secondDerivative=False):
     
     - `F` - deformation gradient in Voigt notation
 
-    - `i` - specify the invariant that should be differentiated 
+    - `i` - specify the invariant (of Cauchy-Green strain tensor) that should be differentiated 
 
     - `secondDerivative` - specify if second derivative should be computed 
     

@@ -80,6 +80,7 @@ def loadFemData(path, AD = True, noiseLevel = 0., noiseType = 'displacement', de
 
 
 	#integrator/shape-function data
+    #need review???
     df = pd.read_csv(path+'/output_integrator.csv',dtype=np.float64)
     gradNa = []
     for i in range(numNodesPerElement):
@@ -103,7 +104,7 @@ def loadFemData(path, AD = True, noiseLevel = 0., noiseType = 'displacement', de
             for j in range(dim):
                 F[:,voigtMap[i][j]] += u[a][:,i] * gradNa[a][:,j]
     F[:,0] += 1.0#Fij = ui/XJ + deltaiJ
-    F[:,3] += 1.0#why?
+    F[:,3] += 1.0#Fij = ui/XJ + deltaiJ
 
     if(noiseType == 'strain'):
         F += noiseLevel * torch.randn_like(F)
