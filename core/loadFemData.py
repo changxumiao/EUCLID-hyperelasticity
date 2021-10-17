@@ -153,7 +153,7 @@ def loadFemData(path, AD = True, noiseLevel = 0., noiseType = 'displacement', de
             ---
             
             """
-            d_feature_dI = torch.zeros(features.shape[0],features.shape[1])
+            d_feature_dI = torch.zeros(features.shape[0],features.shape[1])#initialization
             for i in range(features.shape[1]):
                 temp = torch.autograd.grad(features[:,i:(i+1)],I,torch.ones(I.shape[0],1),create_graph=True,allow_unused=True)[0]
                 if(type(temp)!=type(None)):

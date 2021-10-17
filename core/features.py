@@ -1,3 +1,4 @@
+#to generate dictionary of elastic energy
 from .__importList__ import *
 
 def computeFeatures(I1, I2, I3):
@@ -34,8 +35,10 @@ def computeFeatures(I1, I2, I3):
     K1 = I1 * torch.pow(I3,-1/3) - 3.0
     K2 = (I1 + I3 - 1) * torch.pow(I3,-2/3) - 3.0
     J = torch.sqrt(I3)
+    #the above formula are invariant of deformation gradient
     #Calculate the number of features.
     numFeatures = 0
+    #number of dictionary candidate
     #Polynomial terms (dependent on K1 and K2).
     for n in range(N):
         numFeatures += n + 2
@@ -48,11 +51,12 @@ def computeFeatures(I1, I2, I3):
         numFeatures += 1
     #Calculate the features.
     x = torch.zeros(I1.shape[0],numFeatures)
-    i=-1;
+    #???what is x???
+    i=-1
     #Polynomial terms (dependent on K1 and K2).
     for p in range(1,N+1):
         for q in range(p+1):
-            i+=1; x[:,i:(i+1)] = K1**(p-q) * K2**q
+            i+=1; x[:,i:(i+1)] = K1**(p-q) * K2**q #why does it double component in 2nd dimension
 #        for q in range(1): # REMOVE K2
 #            i+=1; x[:,i:(i+1)] = K1**(p-q) # REMOVE K2
     #Volumetric terms (dependent on J):
@@ -61,13 +65,14 @@ def computeFeatures(I1, I2, I3):
     #Additional Gent-Thomas feature.
     if considerGentThomas:
         i+=1; x[:,i:(i+1)] = torch.log((K2+3.0)/3.0)
-
+        #based on how i accumulates, the components of candidate present single contribution, instead of their multiplication form,
+        #??? why??? it does not look like common dictionary, such as Kronecker-fourier dictionary
     return x
 
 def getNumberOfFeatures():
     """
     Compute number of features.
-    
+    #??? it should be directly the i, or, althernatively, it should be x.shape[1]
     _Input Arguments_
     
     - _none_
