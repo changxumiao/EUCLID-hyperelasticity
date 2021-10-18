@@ -97,7 +97,7 @@ def applyPenaltyLpRandomStart(datasets,LHS,RHS,c):
     print('Lp-norm: p=', c.p)
     print('Number of initial guesses:', c.numGuesses)
     print()
-    theta = np.linalg.solve(LHS,RHS)
+    theta = np.linalg.solve(LHS,RHS)#???LASSO?
     at_least_one_converged = False
     for restarts in range(c.numGuesses):
         if restarts == 0:
