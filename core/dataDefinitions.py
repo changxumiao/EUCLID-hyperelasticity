@@ -36,7 +36,7 @@ class FeatureSet:
     def __init__(self, features=None, d_features_dI1=None, d_features_dI2=None, d_features_dI3=None, dd_features_dI1dI1=None, dd_features_dI1dI3=None, dd_features_dI3dI1=None, dd_features_dI3dI3=None):
         """
         Generate `FeatureSet` object.
-        
+        what is it?
         """
         #All matrices have rows = numElements, cols=numFeatures
         self.features = features 
@@ -129,7 +129,7 @@ class FemDataset:
         #---------------------------------------------------------------------------------
         #The following are all 2D matrices with number of rows = numElements.
         #Each matrix represents certain strain-related quantity 
-        #evaulated at the respecive element's quadrature points
+        #evaluated at the respective element's quadrature points
         self.F = F #deformation gradient: numElements x 4
         self.J = J #determinant of F: numElements x 1
         self.C = C #right Cauchy-Green tensor C=F^T*F : numElements x 4

@@ -25,7 +25,7 @@ for loadstep in c.loadsteps:
     # =====================================================================
     # LHS & RHS OF THE WEAK FORM:
     # =====================================================================
-    numFeatures = getNumberOfFeatures()
+    numFeatures = getNumberOfFeatures()#can be optimized
     if counter_load == 0:
         LHS = np.zeros([numFeatures, numFeatures])
         RHS = np.zeros([numFeatures])

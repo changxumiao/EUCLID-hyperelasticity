@@ -33,7 +33,9 @@ def computeFeatures(I1, I2, I3):
 #    print("N: " + str(N))
 #    print("M: " + str(M))
     K1 = I1 * torch.pow(I3,-1/3) - 3.0
+    #compute the first invariant of deformation gradiant
     K2 = (I1 + I3 - 1) * torch.pow(I3,-2/3) - 3.0
+    #compute the seconde invariant of deformtation gradient
     J = torch.sqrt(I3)
     #the above formula are invariant of deformation gradient
     #Calculate the number of features.
@@ -51,12 +53,11 @@ def computeFeatures(I1, I2, I3):
         numFeatures += 1
     #Calculate the features.
     x = torch.zeros(I1.shape[0],numFeatures)
-    #???what is x???
     i=-1
     #Polynomial terms (dependent on K1 and K2).
     for p in range(1,N+1):
         for q in range(p+1):
-            i+=1; x[:,i:(i+1)] = K1**(p-q) * K2**q #why does it double component in 2nd dimension
+            i+=1; x[:,i:(i+1)] = K1**(p-q) * K2**q 
 #        for q in range(1): # REMOVE K2
 #            i+=1; x[:,i:(i+1)] = K1**(p-q) # REMOVE K2
     #Volumetric terms (dependent on J):
@@ -72,7 +73,8 @@ def computeFeatures(I1, I2, I3):
 def getNumberOfFeatures():
     """
     Compute number of features.
-    #??? it should be directly the i, or, althernatively, it should be x.shape[1]
+    ??? it should be directly the i, or, althernatively, it should be x.shape[1]
+    bad foo since it rerun the computeFeatures, waste of time
     _Input Arguments_
     
     - _none_

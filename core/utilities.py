@@ -15,7 +15,7 @@ def computeJacobian(F):
     ---
     
     """
-    F11 = F[:,0:1]
+    F11 = F[:,0:1]#to get a tensor instead of its element
     F12 = F[:,1:2]
     F21 = F[:,2:3]
     F22 = F[:,3:4]
@@ -48,7 +48,7 @@ def computeCauchyGreenStrain(F):
     C21 = F11*F12 + F21*F22
     C22 = F12**2 + F22**2
 
-    C = torch.cat((C11,C12,C21,C22),dim=1)
+    C = torch.cat((C11,C12,C21,C22),dim=1)# no math operation but attaching them in single on tensor
     return C
 
 

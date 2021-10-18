@@ -39,7 +39,7 @@ def loadFemData(path, AD = True, noiseLevel = 0., noiseType = 'displacement', de
     #nodal data
     df = pd.read_csv(path+'/output_nodes.csv',dtype=np.float64)
     numNodes = df.shape[0]
-    x_nodes = torch.tensor(df[['x','y']].values)# load x and y of nodes
+    x_nodes = torch.tensor(df[['x','y']].values)# load x and y of nodes, x_node is not a good name
 
     u_nodes = torch.tensor(df[['ux','uy']].values)# load displacement of nodes
 
@@ -80,7 +80,7 @@ def loadFemData(path, AD = True, noiseLevel = 0., noiseType = 'displacement', de
 
 
 	#integrator/shape-function data
-    #need review???
+    #area of each element
     df = pd.read_csv(path+'/output_integrator.csv',dtype=np.float64)
     gradNa = []
     for i in range(numNodesPerElement):
@@ -92,9 +92,9 @@ def loadFemData(path, AD = True, noiseLevel = 0., noiseType = 'displacement', de
     u = []
     for i in range(numNodesPerElement):
         u.append(u_nodes[connectivity[i],:])
-
+    #rearrange displacment info of nodes based on elements: arranged in element-wise way and sequence of element
     
-    #computing deformation gradient at quadrature points
+    #computing deformation gradient at quadrature points? or Gaussian point
     dim=2
     voigtMap = [[0,1],[2,3]]
     
@@ -130,9 +130,10 @@ def loadFemData(path, AD = True, noiseLevel = 0., noiseType = 'displacement', de
     dI3dF = computeStrainInvariantDerivatives(F,3)
 
     #computing extended set of nonlinear features
+    #related to dictionary
     featureSet = FeatureSet()
 
-
+    #the following part is designed for future use: not only the 
     if(AD==True):
         featureSet.features = computeFeatures(I1, I2, I3) #don't detach, need it for autograd
 
@@ -169,7 +170,7 @@ def loadFemData(path, AD = True, noiseLevel = 0., noiseType = 'displacement', de
 #        featureSet.dd_features_dI3dI1 = differentiateFeaturesWithInvariants(featureSet.d_features_dI3,I1)
 #        featureSet.dd_features_dI3dI3 = differentiateFeaturesWithInvariants(featureSet.d_features_dI3,I3)
 
-        #detach features now:
+        #detach features now:# similar to isolate?
         featureSet.features = featureSet.features.detach()
         featureSet.d_features_dI1 = featureSet.d_features_dI1.detach()
         featureSet.d_features_dI2 = featureSet.d_features_dI2.detach()

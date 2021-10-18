@@ -31,8 +31,8 @@ def extendLHSRHS(data,c,LHS,RHS):
     
     """
     print('\n-----------------------------------------------------')
-    print('Consider new load step in LHS and RHS.')
-    print('Balance factor: ', c.balance)
+    print('Consider new load step in LHS and RHS.')#???
+    print('Balance factor: ', c.balance)#???
     LHS_weak = computeWeakLHS(data,c)
     #Assumption: force is measured globally at the boundary.
     LHS_step , RHS_step = considerReactionGlobal(data,LHS_weak,c)
@@ -161,12 +161,12 @@ def computeWeakLHS(data,c):
     
     """
     numFeatures = data.featureSet.features.shape[1]
-    LHS = np.zeros((c.dim*data.numNodes,numFeatures)) #allocate memory
-    for ele in range(data.numElements):                
+    LHS = np.zeros((c.dim*data.numNodes,numFeatures)) #allocate memory, related to eqn 10 in paper
+    for ele in range(data.numElements):
         d_features_dF_element = assembleFeatureDerivative(data,ele)
         B_element = assembleB(data,ele,c)
-        LHS_element = np.transpose(B_element).dot(np.transpose(d_features_dF_element)) * data.qpWeights[ele]
-        LHS = assembleGlobalMatrix(LHS,LHS_element,data.connectivity,ele,c)
+        LHS_element = np.transpose(B_element).dot(np.transpose(d_features_dF_element)) * data.qpWeights[ele]# get the local one
+        LHS = assembleGlobalMatrix(LHS,LHS_element,data.connectivity,ele,c)#assemble the global one
     return LHS
 
 def considerReactionGlobal(data,LHS,c):
@@ -191,7 +191,7 @@ def considerReactionGlobal(data,LHS,c):
     
     """
     #Considers Reaction forces to be known globally.
-    non_dirichlet_nodes = ~(zipper(data.dirichlet_nodes))
+    non_dirichlet_nodes = ~(zipper(data.dirichlet_nodes))#bsc nodes are nodes on boundaries. Dirichlet nodes are subject to specified displacement while non-dirichlet nodes are subject to force
     LHS_bulk = LHS[non_dirichlet_nodes,:]
     #The overdetermined linear system can be solved in a least-squares sense.
     LHS_bulk = 2*np.transpose(LHS_bulk).dot(LHS_bulk)
@@ -206,6 +206,7 @@ def considerReactionGlobal(data,LHS,c):
     LHS = LHS_bulk+c.balance*LHS_reaction
     RHS = c.balance*RHS_reaction
     return LHS , RHS
+    #that is to extract rang and colones related to force and unknown displacement
 
 #=====================================================================
 # HELP MATRICES:
