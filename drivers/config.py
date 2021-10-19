@@ -53,7 +53,7 @@ else:
 # (HYPER-)PARAMETERS:
 #=====================================================================
 # hyperparameters for cost function
-balance = 100#what is it for?
+balance = 100#lambda_r in the paper
 
 # Lp-regularization
 penaltyLp = 1e-4 # initial lp-norm penalty parameter
