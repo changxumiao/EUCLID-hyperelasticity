@@ -46,7 +46,7 @@ def applyPenaltyLpThreshold(datasets,LHS,RHS,theta,c):
         #Save parameters.
         temp = np.copy(theta)
         #Find parameters greater than threshold.
-        theta_greater = np.abs(theta) >= c.threshold_iter
+        theta_greater = np.abs(theta) >= c.threshold_iter# return an array of index
         #Compute the LHS of the fixed point mapping.
         penalty_weighted = np.zeros_like(theta)
         for idx in range(len(penalty_weighted)):
@@ -56,11 +56,11 @@ def applyPenaltyLpThreshold(datasets,LHS,RHS,theta,c):
         #Apply the fixed-point iteration only to parameters greater than the
         #threshold.
         LHS_Lp = LHS_Lp[theta_greater,:]
-        LHS_Lp = LHS_Lp[:,theta_greater]
+        LHS_Lp = LHS_Lp[:,theta_greater]# elimitating rows and columns
         theta[theta_greater] = np.linalg.solve(LHS_Lp,RHS[theta_greater])
         for idx in range(len(theta)):
             if not(theta_greater[idx]):
-                theta[idx] = 0
+                theta[idx] = 0# make other component 0
         if all( np.absolute(temp-theta) < 1e-3):
             converged = True
             # print("Converged after fixed-point iteration:", i)
@@ -97,7 +97,7 @@ def applyPenaltyLpRandomStart(datasets,LHS,RHS,c):
     print('Lp-norm: p=', c.p)
     print('Number of initial guesses:', c.numGuesses)
     print()
-    theta = np.linalg.solve(LHS,RHS)#???LASSO?
+    theta = np.linalg.solve(LHS,RHS)#?LASSO? no, it is classical algorithm.
     at_least_one_converged = False
     for restarts in range(c.numGuesses):
         if restarts == 0:
